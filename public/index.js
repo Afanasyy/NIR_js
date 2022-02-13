@@ -61,6 +61,16 @@ var style = [
   },
 ];
 
+var InforObj = [];
+
+function closeOtherInfo() {
+  if (InforObj.length > 0) {
+    InforObj[0].set("marker", null);
+    InforObj[0].close();
+    InforObj.length = 0;
+  }
+}
+
 function initMap() {
   // The location of Uluru
   let uluru = { lat: cord["sch1"][0], lng: cord["sch1"][1] };
@@ -70,6 +80,7 @@ function initMap() {
     center: uluru,
   });
   map.setOptions({ styles: style });
+
   for (i in cord) {
     if (i == "sch1") {
       let color = "blue";
@@ -91,6 +102,8 @@ function initMap() {
       });
     } else if (i == "houses") {
       for (j of cord[i]) {
+        var contentString =
+          j[3] + "<br>" + "Количесво детей в доме = " + j[2].toString();
         uluru = { lat: j[0], lng: j[1] };
         let color = "red";
         iconOptions = {
@@ -107,6 +120,14 @@ function initMap() {
           position: uluru,
           map: map,
           icon: iconOptions,
+        });
+        const infowindow = new google.maps.InfoWindow({
+          content: contentString,
+        });
+        marker.addListener("click", function () {
+          closeOtherInfo();
+          infowindow.open(map, marker);
+          InforObj[0] = infowindow;
         });
       }
     } else {

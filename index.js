@@ -50,6 +50,8 @@ app.get("/getSch", function (req, res) {
       arr_h.push([
         data_data[parseInt(i["idh"]) - 1]["lat"],
         data_data[parseInt(i["idh"]) - 1]["lon"],
+        i["child"],
+        data_data[parseInt(i["idh"]) - 1]["addr"],
       ]);
     }
   }
