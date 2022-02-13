@@ -8,26 +8,29 @@
     <title>Document</title>
   </head>
   <body>
-    <select id="sel" onchange="changeOption()" size="16">
-      <option value="s1">Школа №47</option>
-      <option value="s2">Школа №122</option>
-      <option value="s3">Гимназия №25</option>
-      <option value="s4">Лицей №28</option>
-      <option value="s5">Школа №29</option>
-      <option value="s6">Школа №186</option>
-      <option value="s7">Школа №49</option>
-      <option value="s8">Школа №54</option>
-      <option value="s9">Школа №24</option>
-      <option value="s10">Школа №44</option>
-      <option value="s11">Школа №46</option>
-      <option value="s12">Школа №173</option>
-      <option value="s13">Гимназия №53</option>
-      <option value="s14">Школа №187</option>
-      <option value="s15">Школа №151</option>
-      <option value="s16">Школа №18</option>
-    </select>
-
-    <div id="map"></div>
+    <div class="parent">
+      <div class="s">
+        <select id="sel" onchange="changeOption()" size="16">
+          <option value="s1">Школа №47</option>
+          <option value="s2">Школа №122</option>
+          <option value="s3">Гимназия №25</option>
+          <option value="s4">Лицей №28</option>
+          <option value="s5">Школа №29</option>
+          <option value="s6">Школа №186</option>
+          <option value="s7">Школа №49</option>
+          <option value="s8">Школа №54</option>
+          <option value="s9">Школа №24</option>
+          <option value="s10">Школа №44</option>
+          <option value="s11">Школа №46</option>
+          <option value="s12">Школа №173</option>
+          <option value="s13">Гимназия №53</option>
+          <option value="s14">Школа №187</option>
+          <option value="s15">Школа №151</option>
+          <option value="s16">Школа №18</option>
+        </select>
+      </div>
+      <div id="map"></div>
+    </div>
 
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script
