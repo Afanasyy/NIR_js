@@ -16,6 +16,7 @@ db.all("SELECT* FROM schools", (err, rows) => {
     let tmp = i["cord"].split(", ");
     for (j in tmp) tmp[j] = parseFloat(tmp[j]);
     tmp.push(i["name"]);
+    tmp.push(i["addr"]);
     schools.push(tmp);
   }
 });
@@ -39,6 +40,7 @@ app.get("/getSch", function (req, res) {
   let cord = test["cord"].split(", ");
   for (i in cord) cord[i] = parseFloat(cord[i]);
   cord.push(test["name"]);
+  cord.push(test["addr"]);
   let arr_h = [];
   for (i of data_ans) {
     if (i["ids"] == req.query.sch) {

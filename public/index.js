@@ -9,7 +9,7 @@ function httpGetAsync(theUrl, callback) {
 }
 
 var cord = {
-  sch1: [56.32318354412199, 44.00106588674056, ""],
+  sch1: [56.32318354412199, 44.00106588674056],
   houses: [],
   sch: [],
 };
@@ -83,6 +83,7 @@ function initMap() {
 
   for (i in cord) {
     if (i == "sch1") {
+      let contentString = cord["sch1"][3];
       let color = "blue";
       iconOptions = {
         path: google.maps.SymbolPath.CIRCLE,
@@ -100,9 +101,17 @@ function initMap() {
         icon: iconOptions,
         label: cord["sch1"][2],
       });
+      const infowindow = new google.maps.InfoWindow({
+        content: contentString,
+      });
+      marker.addListener("click", function () {
+        closeOtherInfo();
+        infowindow.open(map, marker);
+        InforObj[0] = infowindow;
+      });
     } else if (i == "houses") {
       for (j of cord[i]) {
-        var contentString =
+        let contentString =
           j[3] + "<br>" + "Количесво детей в доме = " + j[2].toString();
         uluru = { lat: j[0], lng: j[1] };
         let color = "red";
@@ -133,6 +142,7 @@ function initMap() {
     } else {
       for (j of cord[i]) {
         if (j[2] != cord["sch1"][2]) {
+          let contentString = j[3];
           uluru = { lat: j[0], lng: j[1] };
           let color = "green";
           iconOptions = {
@@ -150,6 +160,14 @@ function initMap() {
             map: map,
             icon: iconOptions,
             label: j[2],
+          });
+          const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+          });
+          marker.addListener("click", function () {
+            closeOtherInfo();
+            infowindow.open(map, marker);
+            InforObj[0] = infowindow;
           });
         }
       }
