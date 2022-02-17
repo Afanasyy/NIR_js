@@ -44,7 +44,7 @@ app.get("/onStart", (req, res) => {
 
 app.get("/getSch", function (req, res) {
   console.log(req.query);
-  let test, lost;
+  let test;
   for (i of data_s) if (i["id"] == req.query.sch) test = i;
   let cord = test["cord"].split(", ");
   for (i in cord) cord[i] = parseFloat(cord[i]);
