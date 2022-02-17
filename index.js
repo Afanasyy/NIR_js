@@ -7,30 +7,39 @@ var db = new sqlite3.Database("db.db");
 
 app.use(express.static("public"));
 
+var data_ans;
+var data_data;
 var data_s;
 var schools = [];
-db.all("SELECT* FROM schools", (err, rows) => {
-  if (err) console.log(err);
-  data_s = rows;
-  for (i of data_s) {
-    let tmp = i["cord"].split(", ");
-    for (j in tmp) tmp[j] = parseFloat(tmp[j]);
-    tmp.push(i["name"]);
-    tmp.push(i["addr"]);
-    schools.push(tmp);
-  }
-});
 
-var data_ans;
+app.get("/onStart", (req, res) => {
+  let t = req.query["ans"];
+  data_ans = [];
+  data_data = [];
+  data_s = [];
+  schools = [];
+  db.all("SELECT* FROM " + t, (err, rows) => {
+    data_ans = rows;
+  });
 
-db.all("SELECT* FROM ans_1", (err, rows) => {
-  data_ans = rows;
-});
+  db.all("SELECT id, lat, lon, addr FROM final", (err, rows) => {
+    data_data = rows;
+  });
+  let ans = [];
 
-var data_data;
-
-db.all("SELECT id, lat, lon, addr FROM final", (err, rows) => {
-  data_data = rows;
+  db.all("SELECT* FROM schools", (err, rows) => {
+    if (err) console.log(err);
+    data_s = rows;
+    for (i of data_s) {
+      let tmp = i["cord"].split(", ");
+      for (j in tmp) tmp[j] = parseFloat(tmp[j]);
+      tmp.push(i["name"]);
+      tmp.push(i["addr"]);
+      schools.push(tmp);
+      ans.push([i["id"], i["name"]]);
+    }
+    res.send(ans);
+  });
 });
 
 app.get("/getSch", function (req, res) {

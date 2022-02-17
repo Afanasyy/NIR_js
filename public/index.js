@@ -1,3 +1,17 @@
+function start() {
+  let str = document.getElementById("inp").value;
+  let sel = document.getElementById("sel");
+  httpGetAsync("/onStart?ans=" + str, (test) => {
+    sel.innerHTML = "";
+    for (i of JSON.parse(test)) {
+      let tmp = document.createElement("option");
+      tmp.value = i[0];
+      tmp.label = i[1];
+      sel.append(tmp);
+    }
+  });
+}
+
 function httpGetAsync(theUrl, callback) {
   let xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
@@ -76,7 +90,7 @@ function initMap() {
   let uluru = { lat: cord["sch1"][0], lng: cord["sch1"][1] };
   // The map, centered at Uluru
   const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 17,
+    zoom: 13,
     center: uluru,
   });
   map.setOptions({ styles: style });
