@@ -1,20 +1,9 @@
-/* Set the size of the div element that contains the map */
-.parent {
-  width: 100%;
+#map {
+  width: 70%;
   height: 100%;
   position: absolute;
   top: 0;
-  left: 0;
-  overflow: auto;
-  display: flex;
+  right: 0;
 }
-#map {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: -300px 0 0 -300px;
-  height: 600px;
-  /* The height is 400 pixels */
-  width: 600px;
-  /* The width is the width of the web page */
+.s {
 }
