@@ -22,7 +22,7 @@ app.get("/onStart", (req, res) => {
     data_ans = rows;
   });
 
-  db.all("SELECT id, lat, lon, addr FROM final", (err, rows) => {
+  db.all("SELECT id, cord, addr FROM final", (err, rows) => {
     data_data = rows;
   });
   let ans = [];
@@ -31,7 +31,7 @@ app.get("/onStart", (req, res) => {
     if (err) console.log(err);
     data_s = rows;
     for (i of data_s) {
-      let tmp = i["cord"].split(", ");
+      let tmp = i["cord"].split(",");
       for (j in tmp) tmp[j] = parseFloat(tmp[j]);
       tmp.push(i["name"]);
       tmp.push(i["addr"]);
@@ -46,7 +46,7 @@ app.get("/getSch", function (req, res) {
   console.log(req.query);
   let test;
   for (i of data_s) if (i["id"] == req.query.sch) test = i;
-  let cord = test["cord"].split(", ");
+  let cord = test["cord"].split(",");
   for (i in cord) cord[i] = parseFloat(cord[i]);
   cord.push(test["name"]);
   cord.push(test["addr"]);
@@ -54,13 +54,9 @@ app.get("/getSch", function (req, res) {
   for (i of data_ans) {
     if (i["ids"] == req.query.sch) {
       console.log(i);
-      console.log([
-        data_data[parseInt(i["idh"]) - 1]["lat"],
-        data_data[parseInt(i["idh"]) - 1]["lon"],
-      ]);
+      console.log(data_data[parseInt(i["idh"]) - 1]["cord"]);
       arr_h.push([
-        data_data[parseInt(i["idh"]) - 1]["lat"],
-        data_data[parseInt(i["idh"]) - 1]["lon"],
+        data_data[parseInt(i["idh"]) - 1]["cord"].split(","),
         i["child"],
         data_data[parseInt(i["idh"]) - 1]["addr"],
       ]);

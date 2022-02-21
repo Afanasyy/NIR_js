@@ -87,7 +87,10 @@ function closeOtherInfo() {
 
 function initMap() {
   // The location of Uluru
-  let uluru = { lat: cord["sch1"][0], lng: cord["sch1"][1] };
+  let uluru = {
+    lat: parseFloat(cord["sch1"][0]),
+    lng: parseFloat(cord["sch1"][1]),
+  };
   // The map, centered at Uluru
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 13,
@@ -126,8 +129,8 @@ function initMap() {
     } else if (i == "houses") {
       for (j of cord[i]) {
         let contentString =
-          j[3] + "<br>" + "Количесво детей в доме = " + j[2].toString();
-        uluru = { lat: j[0], lng: j[1] };
+          j[2] + "<br>" + "Количесво детей в доме = " + j[1].toString();
+        uluru = { lat: parseFloat(j[0][0]), lng: parseFloat(j[0][1]) };
         let color = "red";
         iconOptions = {
           path: google.maps.SymbolPath.CIRCLE,
@@ -157,7 +160,7 @@ function initMap() {
       for (j of cord[i]) {
         if (j[2] != cord["sch1"][2]) {
           let contentString = j[3];
-          uluru = { lat: j[0], lng: j[1] };
+          uluru = { lat: parseFloat(j[0]), lng: parseFloat(j[1]) };
           let color = "green";
           iconOptions = {
             path: google.maps.SymbolPath.CIRCLE,
