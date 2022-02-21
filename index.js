@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database("db.db");
+var db = new sqlite3.Database("db2.db");
 
 app.use(express.static("public"));
 
