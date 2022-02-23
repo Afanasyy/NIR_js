@@ -126,7 +126,7 @@ function initMap() {
     } else if (i == "houses") {
       for (j of cord[i]) {
         let contentString =
-          j[3] + "<br>" + "Количесво детей в доме = " + j[2].toString();
+          j[3] + "<br>" + "Количество детей в доме = " + j[2].toString();
         uluru = { lat: j[0], lng: j[1] };
         let color = "red";
         iconOptions = {
