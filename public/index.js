@@ -1,9 +1,27 @@
+function funonload(){
+  let sel = document.getElementById("sol");
+  httpGetAsync("/onLoad",(test)=>{
+    sel.innerHTML = "";
+    test=JSON.parse(test)
+    sel.size=test.length
+    for (i of test) {
+      let tmp = document.createElement("option");
+      tmp.value = i["name"];
+      tmp.label = i["name"];
+      sel.append(tmp);}
+  });
+}
+
 function start() {
-  let str = document.getElementById("inp").value;
+  let sol = document.getElementById("sol");
+  let selectedOption = sol.options[sol.selectedIndex];
+  let str = selectedOption.value;
   let sel = document.getElementById("sel");
   httpGetAsync("/onStart?ans=" + str, (test) => {
     sel.innerHTML = "";
-    for (i of JSON.parse(test)) {
+    test=JSON.parse(test)
+    sel.size=test.length
+    for (i of test) {
       let tmp = document.createElement("option");
       tmp.value = i[0];
       tmp.label = i[1];
@@ -27,6 +45,7 @@ var cord = {
   houses: [],
   sch: [],
 };
+
 
 function changeOption() {
   let sel = document.getElementById("sel");
@@ -88,8 +107,8 @@ function closeOtherInfo() {
 function initMap() {
   // The location of Uluru
   let uluru = {
-    lat: parseFloat(cord["sch1"][0]),
-    lng: parseFloat(cord["sch1"][1]),
+    lat: cord["sch1"][0],
+    lng: cord["sch1"][1],
   };
   // The map, centered at Uluru
   const map = new google.maps.Map(document.getElementById("map"), {
@@ -130,7 +149,7 @@ function initMap() {
       for (j of cord[i]) {
         let contentString =
           j[2] + "<br>" + "Количесво детей в доме = " + j[1].toString();
-        uluru = { lat: parseFloat(j[0][0]), lng: parseFloat(j[0][1]) };
+        uluru = { lat: j[0][0], lng: j[0][1] };
         let color = "red";
         iconOptions = {
           path: google.maps.SymbolPath.CIRCLE,
@@ -160,7 +179,7 @@ function initMap() {
       for (j of cord[i]) {
         if (j[2] != cord["sch1"][2]) {
           let contentString = j[3];
-          uluru = { lat: parseFloat(j[0]), lng: parseFloat(j[1]) };
+          uluru = { lat: j[0], lng: j[1] };
           let color = "green";
           iconOptions = {
             path: google.maps.SymbolPath.CIRCLE,

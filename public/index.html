@@ -7,11 +7,10 @@
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <title>Document</title>
   </head>
-  <body>
-    <div class="s">
-      <button onclick="start()">click</button>
-      <input type="text" id="inp" />
-      <select id="sel" onchange="changeOption()" size="16"></select>
+  <body onload="funonload()">
+    <div class="s">      
+      <select id="sol" onchange="start()"></select>
+      <select id="sel" onchange="changeOption()"></select>
     </div>
     <div id="map"></div>
 

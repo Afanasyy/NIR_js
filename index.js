@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database("db2.db");
+var db = new sqlite3.Database("db3.db");
 
 app.use(express.static("public"));
 
@@ -11,6 +11,18 @@ var data_ans;
 var data_data;
 var data_s;
 var schools = [];
+var data_sol;
+
+app.get("/onLoad",(req,res)=>{
+  db.all("SELECT name FROM sqlite_master WHERE type='table' and name != 'schools' and name != 'final' ORDER BY name",(err,rows)=>{
+    data_sol=rows;
+  })
+res.send(data_sol)
+})
+
+app.get("/loadSol",(req,res)=>{
+  
+})
 
 app.get("/onStart", (req, res) => {
   let t = req.query["ans"];
@@ -54,11 +66,14 @@ app.get("/getSch", function (req, res) {
   for (i of data_ans) {
     if (i["ids"] == req.query.sch) {
       console.log(i);
-      console.log(data_data[parseInt(i["idh"]) - 1]["cord"]);
+      tt=data_data[parseInt(i["idh"])]["cord"].split(", ")
+      console.log(tt);
+      tt[0]=parseFloat(tt[0])
+      tt[1]=parseFloat(tt[1])
       arr_h.push([
-        data_data[parseInt(i["idh"]) - 1]["cord"].split(","),
+        tt,
         i["child"],
-        data_data[parseInt(i["idh"]) - 1]["addr"],
+        data_data[parseInt(i["idh"])]["addr"],
       ]);
     }
   }
