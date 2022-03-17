@@ -45,9 +45,11 @@ app.get("/onStart", (req, res) => {
     for (i of data_s) {
       let tmp = i["cord"].split(",");
       for (j in tmp) tmp[j] = parseFloat(tmp[j]);
-      tmp.push(i["name"]);
-      tmp.push(i["addr"]);
-      schools.push(tmp);
+      let sch=[]
+      sch.push(tmp)
+      sch.push(i["name"]);
+      sch.push(i["addr"]);
+      schools.push(sch);
       ans.push([i["id"], i["name"]]);
     }
     res.send(ans);
@@ -57,11 +59,13 @@ app.get("/onStart", (req, res) => {
 app.get("/getSch", function (req, res) {
   console.log(req.query);
   let test;
+  let fsch=[];
   for (i of data_s) if (i["id"] == req.query.sch) test = i;
   let cord = test["cord"].split(",");
   for (i in cord) cord[i] = parseFloat(cord[i]);
-  cord.push(test["name"]);
-  cord.push(test["addr"]);
+  fsch.push(cord)
+  fsch.push(test["name"]);
+  fsch.push(test["addr"]);
   let arr_h = [];
   for (i of data_ans) {
     if (i["ids"] == req.query.sch) {
@@ -77,7 +81,7 @@ app.get("/getSch", function (req, res) {
       ]);
     }
   }
-  let ans = { sch1: cord, houses: arr_h, sch: schools };
+  let ans = { sch1: fsch, houses: arr_h, sch: schools };
   console.log(ans);
   res.send(ans);
 });
