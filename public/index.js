@@ -72,25 +72,17 @@ function changeOption() {
 }
   
 function createChipsLayout(el) {
-  // Создадим макет метки.
       var Chips = ymaps.templateLayoutFactory.createClass(
           '<div class="'+el+'"></div>',
           {
               build: function () {
                   Chips.superclass.build.call(this);                 
                   var options = this.getData().options,
-                      // Получим размер метки в зависимости от уровня зума.
                       size = 8,
                       element = this.getParentElement().getElementsByClassName(el)[0],
-                      // По умолчанию при задании своего HTML макета фигура активной области не задается,
-                      // и её нужно задать самостоятельно.
-                      // Создадим фигуру активной области "Круг".
                       circleShape = {type: 'Circle', coordinates: [0, 0], radius: size / 2};
-                  // Зададим высоту и ширину метки.
                   element.style.width = element.style.height = size + 'px';
-                  // Зададим смещение.
                   element.style.marginLeft = element.style.marginTop = -size / 2 + 'px';
-                  // Зададим фигуру активной области.
                   options.set('shape', circleShape);
               }
           }
@@ -107,19 +99,19 @@ function setNewMarkers(){
       for(j of cord[i]){
         if(cord['sch1'][1]!=j[1])
         map.geoObjects.add(new ymaps.Placemark(j[0],   
-          {},    
+          {hintContent:j[1]},    
         {iconLayout: createChipsLayout('otherSchool')}
       ))
       }
     }else if(i=='sch1'){
       map.geoObjects.add(new ymaps.Placemark(cord[i][0],   
-        {},    
+        {hintContent: cord[i][1]},    
       {iconLayout: createChipsLayout('school')}
     ))
     }else{
       for(j of cord[i]){
       map.geoObjects.add(new ymaps.Placemark(j[0],   
-        {},    
+        {hintContent:j[2]},    
       {iconLayout: createChipsLayout('house')}
     ))
     }}
