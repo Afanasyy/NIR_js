@@ -1,9 +1,38 @@
-#map {
-  width: 70%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  right: 0;
+html,
+body,
+#map,
+.house,
+.school,
+.otherSchool {
+  width: 1300px;
+  height: 600px;
+  padding: 0;
+  margin: 0;
 }
-.s {
+.house {
+  background: rgba(255, 0, 0, 0.726);
+  border: 0.1em solid #0f1c3f;
+  border-radius: 50%;
+  height: 5em;
+  width: 5em;
+  background-size: 100%;
+  opacity: 0.75;
+}
+.school {
+  background: blue;
+  border: 0.1em solid #0f1c3f;
+  border-radius: 50%;
+  height: 5em;
+  width: 5em;
+  background-size: 100%;
+  opacity: 0.75;
+}
+.otherSchool {
+  background: green;
+  border: 0.1em solid #0f1c3f;
+  border-radius: 50%;
+  height: 5em;
+  width: 5em;
+  background-size: 100%;
+  opacity: 0.75;
 }

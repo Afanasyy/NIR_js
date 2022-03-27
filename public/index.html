@@ -6,20 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <title>Document</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=79911cb1-7157-4bc7-92da-51a6d9b6ff03&lang=ru_RU" type="text/javascript">
+    </script>
   </head>
-  <body>
-    <div class="s">
-      <button onclick="start()">click</button>
-      <input type="text" id="inp" />
-      <select id="sel" onchange="changeOption()" size="16"></select>
+  <body onload="funonload()">    
+  <div id="map"></div>
+  <div class="s">      
+      <select id="sol" onchange="start()"></select>
+      <select id="sel" onchange="changeOption()"></select>
     </div>
-    <div id="map"></div>
-
-    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrcM0eeiZE9cE-seAFvdsnc8iDBP8FvYk&callback=initMap&libraries=&v=weekly"
-      async
-    ></script>
     <script src="index.js"></script>
   </body>
 </html>

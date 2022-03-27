@@ -1,9 +1,42 @@
+ymaps.ready(init)
+
+var map;
+
+function funonload(){
+  let sel = document.getElementById("sol");
+  httpGetAsync("/onLoad",(test)=>{
+    sel.innerHTML = "";
+    test=JSON.parse(test)
+    sel.size=test.length
+    for (i of test) {
+      let tmp = document.createElement("option");
+      tmp.value = i["name"];
+      let t=i["name"];
+      if(t=='ans_0') t='Алг. №2; без огр.'
+      else if(t=='ans_1') t='Алг. №1; без огр.; не уч. детей'
+      else if(t=='ans_2') t='Алг. №1; без огр.; уч. детей' 
+      else if(t=='ans_3') t='Алг. №2; с огр.'
+      else if(t=='ans_4') t='Алг. №1; с огр.; не уч. детей'
+      else if(t=='ans_5') t='Алг. №1; с огр.; уч. детей'
+      else if(t=='ans_6') t='нач. распр. алг. №1; без огр.'
+      else if(t=='ans_7') t='нач. распр. алг. №1; с огр.'
+      else if(t=='ans_8') t='нач. распр. алг. №2; без огр.'
+      else if(t=='ans_9') t='нач. распр. алг. №1; с огр.'
+      tmp.label = t;
+      sel.append(tmp);}
+  });
+}
+
 function start() {
-  let str = document.getElementById("inp").value;
+  let sol = document.getElementById("sol");
+  let selectedOption = sol.options[sol.selectedIndex];
+  let str = selectedOption.value;
   let sel = document.getElementById("sel");
   httpGetAsync("/onStart?ans=" + str, (test) => {
     sel.innerHTML = "";
-    for (i of JSON.parse(test)) {
+    test=JSON.parse(test)
+    sel.size=test.length
+    for (i of test) {
       let tmp = document.createElement("option");
       tmp.value = i[0];
       tmp.label = i[1];
@@ -23,7 +56,7 @@ function httpGetAsync(theUrl, callback) {
 }
 
 var cord = {
-  sch1: [56.32318354412199, 44.00106588674056],
+  sch1: [[56.32867, 44.00205]],
   houses: [],
   sch: [],
 };
@@ -34,157 +67,61 @@ function changeOption() {
   let school = selectedOption.value;
   httpGetAsync("/getSch?sch=" + school, (test) => {
     cord = JSON.parse(test);
-    initMap();
+    setNewMarkers();
   });
 }
-// Initialize and add the map
-var style = [
-  {
-    featureType: "administrative",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-];
+  
+function createChipsLayout(el) {
+      var Chips = ymaps.templateLayoutFactory.createClass(
+          '<div class="'+el+'"></div>',
+          {
+              build: function () {
+                  Chips.superclass.build.call(this);                 
+                  var options = this.getData().options,
+                      size = 8,
+                      element = this.getParentElement().getElementsByClassName(el)[0],
+                      circleShape = {type: 'Circle', coordinates: [0, 0], radius: size / 2};
+                  element.style.width = element.style.height = size + 'px';
+                  element.style.marginLeft = element.style.marginTop = -size / 2 + 'px';
+                  options.set('shape', circleShape);
+              }
+          }
+      );
+  
+      return Chips;
+  };
 
-var InforObj = [];
-
-function closeOtherInfo() {
-  if (InforObj.length > 0) {
-    InforObj[0].set("marker", null);
-    InforObj[0].close();
-    InforObj.length = 0;
-  }
-}
-
-function initMap() {
-  // The location of Uluru
-  let uluru = { lat: cord["sch1"][0], lng: cord["sch1"][1] };
-  // The map, centered at Uluru
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 13,
-    center: uluru,
-  });
-  map.setOptions({ styles: style });
-
-  for (i in cord) {
-    if (i == "sch1") {
-      let contentString = cord["sch1"][3];
-      let color = "blue";
-      iconOptions = {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 6,
-        strokeColor: "black",
-        strokeOpacity: 0.6,
-        strokeWeight: 1.0,
-        fillColor: color,
-        fillOpacity: 0.6,
-      };
-      // The marker, positioned at Uluru
-      const marker = new google.maps.Marker({
-        position: uluru,
-        map: map,
-        icon: iconOptions,
-        label: cord["sch1"][2],
-      });
-      const infowindow = new google.maps.InfoWindow({
-        content: contentString,
-      });
-      marker.addListener("click", function () {
-        closeOtherInfo();
-        infowindow.open(map, marker);
-        InforObj[0] = infowindow;
-      });
-    } else if (i == "houses") {
-      for (j of cord[i]) {
-        let contentString =
-          j[3] + "<br>" + "Количество детей в доме = " + j[2].toString();
-        uluru = { lat: j[0], lng: j[1] };
-        let color = "red";
-        iconOptions = {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 6,
-          strokeColor: "black",
-          strokeOpacity: 0.6,
-          strokeWeight: 1.0,
-          fillColor: color,
-          fillOpacity: 0.6,
-        };
-        // The marker, positioned at Uluru
-        const marker = new google.maps.Marker({
-          position: uluru,
-          map: map,
-          icon: iconOptions,
-        });
-        const infowindow = new google.maps.InfoWindow({
-          content: contentString,
-        });
-        marker.addListener("click", function () {
-          closeOtherInfo();
-          infowindow.open(map, marker);
-          InforObj[0] = infowindow;
-        });
+function setNewMarkers(){
+  map.panTo(cord['sch1'][0],16);
+  map.geoObjects.removeAll();
+  for (i in cord){
+    if(i=='sch'){
+      for(j of cord[i]){
+        if(cord['sch1'][1]!=j[1])
+        map.geoObjects.add(new ymaps.Placemark(j[0],   
+          {hintContent:j[1]},    
+        {iconLayout: createChipsLayout('otherSchool')}
+      ))
       }
-    } else {
-      for (j of cord[i]) {
-        if (j[2] != cord["sch1"][2]) {
-          let contentString = j[3];
-          uluru = { lat: j[0], lng: j[1] };
-          let color = "green";
-          iconOptions = {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 6,
-            strokeColor: "black",
-            strokeOpacity: 0.6,
-            strokeWeight: 1.0,
-            fillColor: color,
-            fillOpacity: 0.6,
-          };
-          // The marker, positioned at Uluru
-          const marker = new google.maps.Marker({
-            position: uluru,
-            map: map,
-            icon: iconOptions,
-            label: j[2],
-          });
-          const infowindow = new google.maps.InfoWindow({
-            content: contentString,
-          });
-          marker.addListener("click", function () {
-            closeOtherInfo();
-            infowindow.open(map, marker);
-            InforObj[0] = infowindow;
-          });
-        }
-      }
-    }
+    }else if(i=='sch1'){
+      map.geoObjects.add(new ymaps.Placemark(cord[i][0],   
+        {hintContent: cord[i][1]},    
+      {iconLayout: createChipsLayout('school')}
+    ))
+    }else{
+      for(j of cord[i]){
+      map.geoObjects.add(new ymaps.Placemark(j[0],   
+        {hintContent:j[2]},    
+      {iconLayout: createChipsLayout('house')}
+    ))
+    }}
   }
-}
+}  
+
+  function init() {
+      map = new ymaps.Map('map', {  
+          center:cord['sch1'][0],        
+          zoom: 16,
+          controls: []
+      });
+     
