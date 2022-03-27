@@ -124,4 +124,4 @@ function setNewMarkers(){
           zoom: 16,
           controls: []
       });
-  };
+     
