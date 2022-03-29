@@ -12,16 +12,13 @@ var data_data;
 var data_s;
 var schools = [];
 var data_sol;
+var const_h;
 
 app.get("/onLoad",(req,res)=>{
   db.all("SELECT name FROM sqlite_master WHERE type='table' and name != 'schools' and name != 'final' ORDER BY name",(err,rows)=>{
     data_sol=rows;
-  })
+  })   
 res.send(data_sol)
-})
-
-app.get("/loadSol",(req,res)=>{
-  
 })
 
 app.get("/onStart", (req, res) => {
@@ -30,30 +27,41 @@ app.get("/onStart", (req, res) => {
   data_data = [];
   data_s = [];
   schools = [];
+  let ans = [];
+  let ans2=[]
   db.all("SELECT* FROM " + t, (err, rows) => {
     data_ans = rows;
-  });
-
-  db.all("SELECT id, cord, addr FROM final", (err, rows) => {
-    data_data = rows;
-  });
-  let ans = [];
-
-  db.all("SELECT* FROM schools", (err, rows) => {
-    if (err) console.log(err);
-    data_s = rows;
-    for (i of data_s) {
-      let tmp = i["cord"].split(",");
-      for (j in tmp) tmp[j] = parseFloat(tmp[j]);
-      let sch=[]
-      sch.push(tmp)
-      sch.push(i["name"]);
-      sch.push(i["addr"]);
-      schools.push(sch);
-      ans.push([i["id"], i["name"]]);
-    }
-    res.send(ans);
-  });
+    db.all("SELECT id, cord, addr FROM final", (err, rows) => {
+      data_data = rows;
+      db.all("SELECT* FROM zero",(err,rows)=> {
+        const_h=rows;    
+        console.log(rows);
+        for(i of const_h){
+          console.log(i);
+          tt=data_data[i["idh"]]["cord"].split(", ")
+          console.log(tt);
+          tt[0]=parseFloat(tt[0])
+          tt[1]=parseFloat(tt[1])
+          ans2.push([tt, data_data[i["idh"]]["addr"]]);
+        }
+      }) 
+      db.all("SELECT* FROM schools", (err, rows) => {
+        if (err) console.log(err);
+        data_s = rows;
+        for (i of data_s) {
+          let tmp = i["cord"].split(",");
+          for (j in tmp) tmp[j] = parseFloat(tmp[j]);
+          let sch=[]
+          sch.push(tmp)
+          sch.push(i["name"]);
+          sch.push(i["addr"]);
+          schools.push(sch);
+          ans.push([i["id"], i["name"]]);
+        }    
+        res.send([ans, ans2, schools]);
+      });
+    });
+  });  
 });
 
 app.get("/getSch", function (req, res) {
@@ -81,7 +89,7 @@ app.get("/getSch", function (req, res) {
       ]);
     }
   }
-  let ans = { sch1: fsch, houses: arr_h, sch: schools };
+  let ans = { sch1: fsch, houses: arr_h};
   console.log(ans);
   res.send(ans);
 });

@@ -1,13 +1,12 @@
 ymaps.ready(init)
 
-var map;
-
+var map, constHouses, dynamic, schools;
 function funonload(){
   let sel = document.getElementById("sol");
-  httpGetAsync("/onLoad",(test)=>{
+  httpGetAsync("/onLoad",(g)=>{
     sel.innerHTML = "";
-    test=JSON.parse(test)
-    sel.size=test.length
+    test=JSON.parse(g)
+    sel.size=test.length-1
     for (i of test) {
       let tmp = document.createElement("option");
       tmp.value = i["name"];
@@ -22,9 +21,19 @@ function funonload(){
       else if(t=='ans_7') t='нач. распр. алг. №1; с огр.'
       else if(t=='ans_8') t='нач. распр. алг. №2; без огр.'
       else if(t=='ans_9') t='нач. распр. алг. №1; с огр.'
+      if(t!='zero'){
       tmp.label = t;
-      sel.append(tmp);}
+      sel.append(tmp);}}
   });
+}
+
+function switcher(){
+  let t=document.getElementsByClassName("switch")[0];
+  let tt=t["children"][0]["checked"];
+  if(tt)
+    constHouses.options.set('visible', true);
+  else
+  constHouses.options.set('visible', false);
 }
 
 function start() {
@@ -32,17 +41,41 @@ function start() {
   let selectedOption = sol.options[sol.selectedIndex];
   let str = selectedOption.value;
   let sel = document.getElementById("sel");
-  httpGetAsync("/onStart?ans=" + str, (test) => {
+  httpGetAsync("/onStart?ans=" + str, (g) => {
     sel.innerHTML = "";
-    test=JSON.parse(test)
-    sel.size=test.length
-    for (i of test) {
+    test=JSON.parse(g)
+    const_cord['h']=test[1];
+    const_cord['s']=test[2];
+    sel.size=test[0].length
+    for (i of test[0]) {
       let tmp = document.createElement("option");
       tmp.value = i[0];
       tmp.label = i[1];
       sel.append(tmp);
     }
+    setConstMarkers()
   });
+}
+
+function setConstMarkers(){  
+  constHouses.removeAll();
+  schools.removeAll();
+for(i of const_cord["h"]){
+  constHouses.add(new ymaps.Placemark(i[0],   
+    {hintContent:i[1]},    
+  {iconLayout: createChipsLayout('const_house')}
+));
+}
+for(i of const_cord["s"]){
+  schools.add(new ymaps.Placemark(i[0],   
+    {hintContent:i[1],
+    iconContent: 'Метка'},    
+  {iconLayout: createChipsLayout('otherSchool')}
+));
+}
+map.geoObjects.add(constHouses);
+constHouses.options.set('visible', false);
+map.geoObjects.add(schools);
 }
 
 function httpGetAsync(theUrl, callback) {
@@ -57,9 +90,9 @@ function httpGetAsync(theUrl, callback) {
 
 var cord = {
   sch1: [[56.32867, 44.00205]],
-  houses: [],
-  sch: [],
+  houses: [],  
 };
+var const_cord={h:[], s:[]};
 
 function changeOption() {
   let sel = document.getElementById("sel");
@@ -93,29 +126,22 @@ function createChipsLayout(el) {
 
 function setNewMarkers(){
   map.panTo(cord['sch1'][0],16);
-  map.geoObjects.removeAll();
+  dynamic.removeAll();
   for (i in cord){
-    if(i=='sch'){
-      for(j of cord[i]){
-        if(cord['sch1'][1]!=j[1])
-        map.geoObjects.add(new ymaps.Placemark(j[0],   
-          {hintContent:j[1]},    
-        {iconLayout: createChipsLayout('otherSchool')}
-      ))
-      }
-    }else if(i=='sch1'){
-      map.geoObjects.add(new ymaps.Placemark(cord[i][0],   
+    if(i=='sch1'){
+      dynamic.add(new ymaps.Placemark(cord[i][0],   
         {hintContent: cord[i][1]},    
       {iconLayout: createChipsLayout('school')}
     ))
     }else{
       for(j of cord[i]){
-      map.geoObjects.add(new ymaps.Placemark(j[0],   
+        dynamic.add(new ymaps.Placemark(j[0],   
         {hintContent:j[2]},    
       {iconLayout: createChipsLayout('house')}
     ))
     }}
   }
+  map.geoObjects.add(dynamic);
 }  
 
   function init() {
@@ -124,4 +150,7 @@ function setNewMarkers(){
           zoom: 16,
           controls: []
       });
+      constHouses = new ymaps.GeoObjectCollection({}, {});
+      dynamic = new ymaps.GeoObjectCollection({}, {});
+      schools = new ymaps.GeoObjectCollection({}, {});
     }
