@@ -9,16 +9,30 @@
     <script src="https://api-maps.yandex.ru/2.1/?apikey=79911cb1-7157-4bc7-92da-51a6d9b6ff03&lang=ru_RU" type="text/javascript">
     </script>
   </head>
-  <body onload="funonload()">    
-  <div id="map"></div>
-  <div class="s">      
-      <select id="ans" onchange="changeAns()"></select>
-      <select id="schs" onchange="changeSch()"></select>
-      <label class="switch">
-        <input type="checkbox" onchange="switcher()">
-        <span class="slider round"></span>
-      </label>
-    </div>
+  <body onload="funonload()">  
+    <div class="f">
+      <div id="map"></div>
+      <div class="menu">      
+          <select id="ans" onchange="changeAns()"></select>
+          <select id="schs" onchange="changeSch()"></select>
+          <label class="switch">
+            <input type="checkbox" onchange="switcher()">
+            <span class="slider round"></span>
+          </label>
+        </div>
+  </div> 
+  <div class="s">
+    <div id="map2"></div>
+    <div class="menu2">      
+        <select id="ans2" onchange="changeAns()"></select>
+        <select id="schs2" onchange="changeSch()"></select>
+        <label class="switch2">
+          <input type="checkbox" onchange="switcher()">
+          <span class="slider round"></span>
+        </label>
+      </div>
+</div> 
+  
     <script src="index.js"></script>
   </body>
 </html>

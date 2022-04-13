@@ -1,24 +1,43 @@
 ymaps.ready(init)
 
 function init() {
-  map = new ymaps.Map('map', {  
-      center:cord['sch1'][0],        
-      zoom: 16,
+  map.push(new ymaps.Map('map', {  
+      center:cord[0]['sch1'][0],        
+      zoom: 13,
       controls: []
-  });
-  constHouses = new ymaps.GeoObjectCollection({}, {});
-  dynamic = new ymaps.GeoObjectCollection({}, {});
-  schools = new ymaps.GeoObjectCollection({}, {});
+  }));
+  constHouses.push(new ymaps.GeoObjectCollection({}, {}));
+  dynamic.push(new ymaps.GeoObjectCollection({}, {})); 
+  schools.push(new ymaps.GeoObjectCollection({}, {}));    
+}
+
+ymaps.ready(init2)
+
+function init2() {
+  map.push(new ymaps.Map('map2', {  
+      center:cord[0]['sch1'][0],        
+      zoom: 13,
+      controls: []
+  }));  
+  constHouses.push(new ymaps.GeoObjectCollection({}, {}));
+  dynamic.push(new ymaps.GeoObjectCollection({}, {})); 
+  schools.push(new ymaps.GeoObjectCollection({}, {}));   
   setConstMarkers();
 }
 
-function switcher(){
-  let t=document.getElementsByClassName("switch")[0];
+function switcher(){  
+  let id =switcher.caller.arguments[0].path[1].className
+  let t=document.getElementsByClassName(id)[0];
   let tt=t["children"][0]["checked"];
-  if(tt)
-    constHouses.options.set('visible', true);
+  let tmp
+  if(id[id.length-1]=='2')
+  tmp=1
   else
-  constHouses.options.set('visible', false);
+  tmp=0  
+  if(tt)
+    constHouses[tmp].options.set('visible', true);
+  else
+  constHouses[tmp].options.set('visible', false);
 }
 
 function httpGetAsync(theUrl, callback) {
@@ -31,38 +50,47 @@ function httpGetAsync(theUrl, callback) {
   xmlHttp.send(null);
 }
 
-var cord = {
-  sch1: [[56.32867, 44.00205]],
+var cord = [{
+  sch1: [[56.302523, 44.017373]],
   houses: [],  
-};
+},{
+  sch1: [[56.302523, 44.017373]],
+  houses: [],  
+}];
 var const_cord={h:[], s:[]};
 
-var map, constHouses, dynamic, schools;
+var map=[], constHouses=[], dynamic=[], schools=[];
 
-var school="", solution=""
+var school=["",""], solution=["",""]
 
 function funonload(){  
   httpGetAsync("/getSelectorSol",(g)=>{
     let sel = document.getElementById("ans");
+    let sel2 = document.getElementById("ans2");
     test=JSON.parse(g)
-    sel.size=test.length-1
+    sel.size=4
+    sel2.size=4
     for (i of test) {
-      let tmp = document.createElement("option");
+      if(i["name"]=='ans_0'||i["name"]=='ans_4'||i["name"]=='ans_7'||i["name"]=='ans_9'){
+      let tmp = document.createElement("option");   
+      let tmp2 = document.createElement("option");    
       tmp.value = i["name"];
+      tmp2.value = i["name"];
       let t=i["name"];
-      if(t=='ans_0') t='Алг. №2; без огр.'
+      if(t=='ans_0') t='Алгоритм №1'
       else if(t=='ans_1') t='Алг. №1; без огр.; не уч. детей'
       else if(t=='ans_2') t='Алг. №1; без огр.; уч. детей' 
       else if(t=='ans_3') t='Алг. №2; с огр.'
-      else if(t=='ans_4') t='Алг. №1; с огр.; не уч. детей'
+      else if(t=='ans_4') t='Алгоритм №2'
       else if(t=='ans_5') t='Алг. №1; с огр.; уч. детей'
       else if(t=='ans_6') t='нач. распр. алг. №1; без огр.'
-      else if(t=='ans_7') t='нач. распр. алг. №1; с огр.'
+      else if(t=='ans_7') t='нач. распр. алг. №1'
       else if(t=='ans_8') t='нач. распр. алг. №2; без огр.'
-      else if(t=='ans_9') t='нач. распр. алг. №1; с огр.'
-      if(t!='zero'){
+      else if(t=='ans_9') t='нач. распр. алг. №2'      
       tmp.label = t;
+      tmp2.label = t;
       sel.append(tmp);
+      sel2.append(tmp2);
     }}
       httpGetAsync("/getConstHouses",(q)=>{
         const_cord["h"]=JSON.parse(q);
@@ -70,58 +98,88 @@ function funonload(){
   });
   httpGetAsync("/getSelectorSch",(g)=>{
     let sel = document.getElementById("schs");
+    let sel2 = document.getElementById("schs2");
     test=JSON.parse(g)    
     const_cord["s"]=test;
     sel.size=test.length
+    sel2.size=test.length
     for (i of test) {
       let tmp = document.createElement("option");
+      let tmp2 = document.createElement("option");
       tmp.value = i["id"];
       tmp.label = i["name"];
-      sel.append(tmp);
+      tmp2.value = i["id"];
+      tmp2.label = i["name"];
+      sel.append(tmp);      
+      sel2.append(tmp2);
     }    
   })
   
 }
 
 function changeAns(){
-  let sol = document.getElementById("ans");
+  let id =changeAns.caller.arguments[0].currentTarget.id
+  let sol = document.getElementById(id);
   let selectedOption = sol.options[sol.selectedIndex];
-  solution = selectedOption.value;
-  if(solution!=""&&school!="")
-  httpGetAsync(`/get?ans=${solution}&sch=${school}`,(cb)=>{
-    cord=JSON.parse(cb);
-    setNewMarkers();
+  let t
+  if(id[id.length-1]=='2')
+  t=1
+  else
+  t=0
+    solution[t] = selectedOption.value;  
+    if(school[t]!=""&&solution[t]!="")
+  httpGetAsync(`/get?ans=${solution[t]}&sch=${school[t]}`,(cb)=>{
+    cord[t]=JSON.parse(cb);
+    setNewMarkers(t);
   })
 }
 
 function changeSch(){
-  let sol = document.getElementById("schs");
+  let id =changeSch.caller.arguments[0].currentTarget.id
+  let sol = document.getElementById(id);
   let selectedOption = sol.options[sol.selectedIndex];
-  school= selectedOption.value;
-  if(solution!=""&&school!="")
-  httpGetAsync(`/get?ans=${solution}&sch=${school}`,(cb)=>{
-    cord=JSON.parse(cb);
-    setNewMarkers();
+  let t
+  if(id[id.length-1]=='2')
+    t=1  
+  else
+    t=0    
+    school[t] = selectedOption.value;
+  if(school[t]!=""&&solution[t]!="")
+  httpGetAsync(`/get?ans=${solution[t]}&sch=${school[t]}`,(cb)=>{
+    cord[t]=JSON.parse(cb);
+    setNewMarkers(t);
   })
 }
 
 function setConstMarkers(){   
 for(i of const_cord["h"]){
-  constHouses.add(new ymaps.Placemark(i[0],   
+  constHouses[0].add(new ymaps.Placemark(i[0],   
     {hintContent:i[1]},    
   {iconLayout: createChipsLayout('const_house')}
 ));
+constHouses[1].add(new ymaps.Placemark(i[0],   
+  {hintContent:i[1]},    
+{iconLayout: createChipsLayout('const_house')}
+));
 }
 for(i of const_cord["s"]){
-  schools.add(new ymaps.Placemark(i["cord"],   
+  schools[0].add(new ymaps.Placemark(i["cord"],   
+    {hintContent:i["name"],
+    iconContent: 'Метка'},    
+  {iconLayout: createChipsLayout('otherSchool')}
+));
+schools[1].add(new ymaps.Placemark(i["cord"],   
     {hintContent:i["name"],
     iconContent: 'Метка'},    
   {iconLayout: createChipsLayout('otherSchool')}
 ));
 }
-map.geoObjects.add(constHouses);
-constHouses.options.set('visible', false);
-map.geoObjects.add(schools);
+map[0].geoObjects.add(constHouses[0]);
+map[1].geoObjects.add(constHouses[1]);
+constHouses[0].options.set('visible', false);
+constHouses[1].options.set('visible', false);
+map[0].geoObjects.add(schools[0]);
+map[1].geoObjects.add(schools[1]);
 }
 
 function createChipsLayout(el) {
@@ -144,24 +202,29 @@ function createChipsLayout(el) {
       return Chips;
   };
 
-function setNewMarkers(){
-  map.panTo(cord['sch1']["cord"],16);
-  dynamic.removeAll();
-  for (i in cord){
+function setNewMarkers(id){ 
+  let t=id
+  map[t].panTo(cord[t]['sch1']["cord"],16);
+  dynamic[t].removeAll();
+  for (i in cord[t]){
     if(i=='sch1'){
-      dynamic.add(new ymaps.Placemark(cord[i]["cord"],   
-        {hintContent: cord[i]["name"]},    
+      dynamic[t].add(new ymaps.Placemark(cord[t][i]["cord"],   
+        {hintContent: cord[t][i]["name"]},    
       {iconLayout: createChipsLayout('school')}
     ))
     }else{
-      for(j of cord[i]){
-        dynamic.add(new ymaps.Placemark(j[0],   
+      for(j of cord[t][i]){
+        dynamic[t].add(new ymaps.Placemark(j[0],   
         {hintContent:j[2]},    
       {iconLayout: createChipsLayout('house')}
     ))
     }}
   }
-  map.geoObjects.add(dynamic);
+  map[t].geoObjects.add(dynamic[t]);
 }  
 
-  
+
+
+
+
+
