@@ -71,22 +71,20 @@ function funonload(){
     sel.size=4
     sel2.size=4
     for (i of test) {
-      if(i["name"]=='ans_0'||i["name"]=='ans_4'||i["name"]=='ans_7'||i["name"]=='ans_9'){
+      if(i["name"]=='ans_4'||i["name"]=='ans_6'||i["name"]=='ans_7'||i["name"]=='ans_8'){
       let tmp = document.createElement("option");   
       let tmp2 = document.createElement("option");    
       tmp.value = i["name"];
       tmp2.value = i["name"];
-      let t=i["name"];
-      if(t=='ans_0') t='Алгоритм №1'
-      else if(t=='ans_1') t='Алг. №1; без огр.; не уч. детей'
-      else if(t=='ans_2') t='Алг. №1; без огр.; уч. детей' 
-      else if(t=='ans_3') t='Алг. №2; с огр.'
-      else if(t=='ans_4') t='Алгоритм №2'
+      let t=i["name"];     
+      if(t=='ans_1') t='Алг. №1; без огр.; не уч. детей'
+      else if(t=='ans_2') t='Алг №1; без огр.; уч. детей' 
+      else if(t=='ans_3') t='Алг. №2; без огр.'
+      else if(t=='ans_4') t='Алгоритм №1'
       else if(t=='ans_5') t='Алг. №1; с огр.; уч. детей'
-      else if(t=='ans_6') t='нач. распр. алг. №1; без огр.'
+      else if(t=='ans_6') t='Алгоритм №2'
       else if(t=='ans_7') t='нач. распр. алг. №1'
-      else if(t=='ans_8') t='нач. распр. алг. №2; без огр.'
-      else if(t=='ans_9') t='нач. распр. алг. №2'      
+      else if(t=='ans_8') t='нач. распр. алг. №2'  
       tmp.label = t;
       tmp2.label = t;
       sel.append(tmp);
@@ -165,12 +163,14 @@ constHouses[1].add(new ymaps.Placemark(i[0],
 for(i of const_cord["s"]){
   schools[0].add(new ymaps.Placemark(i["cord"],   
     {hintContent:i["name"],
-    iconContent: 'Метка'},    
+    iconContent: 'Метка',
+    balloonContent: i["addr"]+'</br>Ограничение = '+i["limit1"]},    
   {iconLayout: createChipsLayout('otherSchool')}
 ));
 schools[1].add(new ymaps.Placemark(i["cord"],   
     {hintContent:i["name"],
-    iconContent: 'Метка'},    
+    iconContent: 'Метка',
+    balloonContent: i["addr"]+'</br>Ограничение = '+i["limit1"]},    
   {iconLayout: createChipsLayout('otherSchool')}
 ));
 }
@@ -209,13 +209,14 @@ function setNewMarkers(id){
   for (i in cord[t]){
     if(i=='sch1'){
       dynamic[t].add(new ymaps.Placemark(cord[t][i]["cord"],   
-        {hintContent: cord[t][i]["name"]},    
+        {hintContent: cord[t][i]["name"],
+        balloonContent: cord[t][i]["addr"]+'</br>Ограничение = '+cord[t][i]["limit1"]},    
       {iconLayout: createChipsLayout('school')}
     ))
     }else{
       for(j of cord[t][i]){
         dynamic[t].add(new ymaps.Placemark(j[0],   
-        {hintContent:j[2]},    
+        {hintContent:j[1]+'</br>'+j[2]},    
       {iconLayout: createChipsLayout('house')}
     ))
     }}

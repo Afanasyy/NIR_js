@@ -19,8 +19,8 @@ function convertCord(str){
 
 app.get("/getSelectorSol",(req,res)=>{
   db.all("SELECT name FROM sqlite_master WHERE type='table' and name != 'schools' and name != 'final' ORDER BY name",(err,rows)=>{    
-    db.all("SELECT id, cord, addr FROM final", (err, rows) => {
-      data_data = rows;
+    db.all("SELECT id, cord, addr FROM final", (err, row) => {
+      data_data = row;
       for(i of data_data) i["cord"]=convertCord(i["cord"])
     })
     res.send(rows) 
@@ -57,7 +57,7 @@ app.get("/get",(req,res)=>{
     for(i of rows){
       if(i["ids"]==school){
         let tmp=parseInt(i["idh"])
-        r.push([data_data[tmp]["cord"], data_data[tmp]["addr"]])
+        r.push([data_data[tmp]["cord"], data_data[tmp]["addr"], i["child"]])
       }
     }
     res.send({ sch1: test, houses: r})
