@@ -6,8 +6,7 @@
   "dependencies": {
     "express": "^4.17.2",
     "node": "^17.4.0",
-    "sqlite3": "^5.0.2",
-    "yarn": "^1.22.18"
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {},
   "scripts": {
