@@ -20,7 +20,10 @@ right: 0;
   padding: 0;
   margin: 0;
 }
-
+p{
+  width: 100px;
+  margin-left: 270px;
+}
 .house {
   background: rgb(0, 255, 0);
   border: 0.1em solid #0f1c3f;
