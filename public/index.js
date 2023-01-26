@@ -22,18 +22,20 @@ function init2() {
   constHouses.push(new ymaps.GeoObjectCollection({}, {}));
   dynamic.push(new ymaps.GeoObjectCollection({}, {})); 
   schools.push(new ymaps.GeoObjectCollection({}, {}));   
-  setConstMarkers();
 }
 
-function switcher(){  
-  let id =switcher.caller.arguments[0].path[1].className
-  let t=document.getElementsByClassName(id)[0];
-  let tt=t["children"][0]["checked"];
+function switcher(a){  
+  let t;
   let tmp
-  if(id[id.length-1]=='2')
-  tmp=1
-  else
-  tmp=0  
+  if(a==2){
+    tmp=1
+    t=document.getElementsByClassName("switch2")[0].children[0];    
+  } 
+  else{
+    tmp=0 
+    t=document.getElementsByClassName("switch")[0].children[0]
+  }
+  let tt=t["checked"];
   if(tt)
     constHouses[tmp].options.set('visible', true);
   else
@@ -92,26 +94,28 @@ function funonload(){
     }}
       httpGetAsync("/getConstHouses",(q)=>{
         const_cord["h"]=JSON.parse(q);
+        httpGetAsync("/getSelectorSch",(g)=>{
+          let sel = document.getElementById("schs");
+          let sel2 = document.getElementById("schs2");
+          test=JSON.parse(g)    
+          const_cord["s"]=test;
+          sel.size=test.length
+          sel2.size=test.length
+          for (i of test) {
+            let tmp = document.createElement("option");
+            let tmp2 = document.createElement("option");
+            tmp.value = i["id"];
+            tmp.label = i["name"];
+            tmp2.value = i["id"];
+            tmp2.label = i["name"];
+            sel.append(tmp);      
+            sel2.append(tmp2);
+          }   
+          setConstMarkers(); 
+        })        
       })
   });
-  httpGetAsync("/getSelectorSch",(g)=>{
-    let sel = document.getElementById("schs");
-    let sel2 = document.getElementById("schs2");
-    test=JSON.parse(g)    
-    const_cord["s"]=test;
-    sel.size=test.length
-    sel2.size=test.length
-    for (i of test) {
-      let tmp = document.createElement("option");
-      let tmp2 = document.createElement("option");
-      tmp.value = i["id"];
-      tmp.label = i["name"];
-      tmp2.value = i["id"];
-      tmp2.label = i["name"];
-      sel.append(tmp);      
-      sel2.append(tmp2);
-    }    
-  })
+  
   
 }
 

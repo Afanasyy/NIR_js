@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <title>Document</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=79911cb1-7157-4bc7-92da-51a6d9b6ff03&lang=ru_RU" type="text/javascript">
+    <!--аккаунт для JavaScript API: syvysyvs-->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=85374fb4-9db6-4712-8608-9b6810a75033&lang=ru_RU" type="text/javascript">
     </script>
   </head>
   <body onload="funonload()">  
@@ -16,7 +17,7 @@
           <select id="ans" onchange="changeAns()"></select>
           <select id="schs" onchange="changeSch()"></select>
           <label class="switch">
-            <input type="checkbox" onchange="switcher()">
+            <input type="checkbox" onchange="switcher(1)">
             <span class="slider round"></span>
           </label>
         </div>
@@ -27,7 +28,7 @@
         <select id="ans2" onchange="changeAns()"></select>
         <select id="schs2" onchange="changeSch()"></select>
         <label class="switch2">
-          <input type="checkbox" onchange="switcher()">
+          <input type="checkbox" onchange="switcher(2)">
           <span class="slider round"></span>
         </label>
       </div>

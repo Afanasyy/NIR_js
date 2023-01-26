@@ -1,12 +1,13 @@
 {
-  "name": "nir_jsq",
+  "name": "nir_js",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": "index.js",
   "dependencies": {
-    "express": "^4.17.2",
+    "express": "^4.18.2",
     "node": "^17.4.0",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.1.4"
   },
   "devDependencies": {},
   "scripts": {
